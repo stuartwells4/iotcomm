@@ -1,0 +1,14 @@
+
+PRIMARY_SERVICE, GAP_SERVICE
+CHARACTERISTIC, GAP_DEVICE_NAME, READ, "iotble"
+
+#import <battery_service.gatt>
+#import <device_information_service.gatt>
+
+PRIMARY_SERVICE, GATT_SERVICE
+CHARACTERISTIC, GATT_SERVICE_CHANGED, READ,
+
+
+
+
+
