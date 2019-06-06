@@ -1,0 +1,3 @@
+[submodule "thirdparty/btstack"]
+	path = thirdparty/btstack
+	url = ssh://git@github.com/stuartwells4/btstack.git
