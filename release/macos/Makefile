@@ -58,7 +58,7 @@ CFLAGS += \
 	-I${BTSTACK_ROOT}/3rd-party/micro-ecc \
 	-I${BTSTACK_ROOT}/3rd-party/bluedroid/decoder/include \
 	-I${BTSTACK_ROOT}/3rd-party/bluedroid/encoder/include \
-	-I${BTSTACK_ROOT}/3rd-party/yxml \
+	-I${BTSTACK_ROOT}/3rd-party/yxml
 
 CFLAGS  += $(shell pkg-config libusb-1.0 --cflags)
 
@@ -86,7 +86,7 @@ BT_CORE += \
 	uECC.c \
 	rfcomm.c \
 	sm.c \
-	att_dispatch.c \
+	att_dispatch.c
 
 PORT_CORE += \
 	hci_transport_h2_libusb.c \
@@ -99,8 +99,6 @@ BT_CORE_OBJ = $(BT_CORE:.c=.o)
 PORT_CORE_OBJ = $(PORT_CORE:.c=.o)
 
 include ${BLECPP_ROOT}/Makefile.inc
-
-default_target: lib-ble.a
 
 clean:
 	rm -f  *.o *.out *.hex *.exe *.wav *.sbc
