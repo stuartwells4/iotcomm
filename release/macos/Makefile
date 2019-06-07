@@ -101,9 +101,10 @@ PORT_CORE_OBJ = $(PORT_CORE:.c=.o)
 include ${BLECPP_ROOT}/Makefile.inc
 
 clean:
-	rm -f  *.o *.out *.hex *.exe *.wav *.sbc
-	rm -f  iotble_uuid.h
+	rm -f  *.o *.out *.hex *.exe *.wav *.sbc *.a
+	rm -f  blecpp_uuid.h*
 	rm -rf *.dSYM
+	rm -f blecpp
 	rm -rf ${BTSTACK_ROOT}/src/classic/*.o
 	rm -rf ${BTSTACK_ROOT}/platform/embedded/*.o
 	rm -rf ${BTSTACK_ROOT}/src/ble/gatt-service/*.o

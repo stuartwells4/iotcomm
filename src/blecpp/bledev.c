@@ -25,7 +25,7 @@
 
 #include <string.h>
 
-#include "blecpp.h"
+#include "bledev.h"
 #include "btstack_defines.h"
 #include "ble/gatt-service/battery_service_server.h"
 #include "ble/gatt-service/device_information_service_server.h"
@@ -40,10 +40,10 @@
 #define DEFAULT_ADVERT_NAME "Default Advert Name"
 #define DEFAULT_DEVICE_NAME "Default Device Name"
 
-blecpp* blecpp::priv_instance= NULL;
-std::once_flag blecpp::priv_init_instance_flag;
+bledev* bledev::priv_instance= NULL;
+std::once_flag bledev::priv_init_instance_flag;
 
-blecpp::blecpp()
+bledev::bledev()
 {
   priv_notification_enabled = false;
   priv_battery_level = 0;
@@ -63,11 +63,11 @@ blecpp::blecpp()
   submit_advert_name(DEFAULT_ADVERT_NAME);
 }
 
-blecpp::~blecpp()
+bledev::~bledev()
 {
 }
 
-void blecpp::start(void)
+void bledev::start(void)
 {
   l2cap_init();
 
@@ -101,43 +101,43 @@ void blecpp::start(void)
   att_server_register_packet_handler(packet_handler);
 }
 
-void blecpp::submit_battery(uint8_t level)
+void bledev::submit_battery(uint8_t level)
 {
   priv_battery_level = level;
   battery_service_server_set_battery_value(priv_battery_level);
 }
 
-void blecpp::submit_manufacture(const std::string& str)
+void bledev::submit_manufacture(const std::string& str)
 {
   priv_str_manufacture = str;
   device_information_service_server_set_manufacturer_name(priv_str_manufacture.c_str());
 }
 
-void blecpp::submit_model_number(const std::string& str)
+void bledev::submit_model_number(const std::string& str)
 {
   priv_str_model = str;
   device_information_service_server_set_model_number(priv_str_model.c_str());
 }
 
-void blecpp::submit_firmware(const std::string& str)
+void bledev::submit_firmware(const std::string& str)
 {
   priv_str_firmware = str;
   device_information_service_server_set_firmware_revision(priv_str_firmware.c_str());
 }
 
-void blecpp::submit_software(const std::string& str)
+void bledev::submit_software(const std::string& str)
 {
   priv_str_software = str;
   device_information_service_server_set_software_revision(priv_str_software.c_str());
 }
 
-void blecpp::submit_serial(const std::string& str)
+void bledev::submit_serial(const std::string& str)
 {
   priv_str_serial = str;
   device_information_service_server_set_serial_number(priv_str_serial.c_str());
 }
 
-void blecpp::submit_advert_name(const std::string& name)
+void bledev::submit_advert_name(const std::string& name)
 {
   int length;
 
@@ -160,7 +160,7 @@ void blecpp::submit_advert_name(const std::string& name)
 }
 
 
-void blecpp::packet_handler (uint8_t packet_type, uint16_t channel, uint8_t *packet, uint16_t size)
+void bledev::packet_handler (uint8_t packet_type, uint16_t channel, uint8_t *packet, uint16_t size)
 {
   UNUSED(channel);
   UNUSED(size);
@@ -172,13 +172,13 @@ void blecpp::packet_handler (uint8_t packet_type, uint16_t channel, uint8_t *pac
 	gap_discoverable_control(1);
 	gap_connectable_control(1);
 	gap_advertisements_enable(1);
-	blecpp::priv_instance->priv_notification_enabled = false;
+	bledev::priv_instance->priv_notification_enabled = false;
 	break;
       }
   }
 }
 
-uint16_t blecpp::read_callback(hci_con_handle_t con_handle, 
+uint16_t bledev::read_callback(hci_con_handle_t con_handle, 
 			       uint16_t att_handle, 
 			       uint16_t offset, 
 			       uint8_t *buffer, 
@@ -187,7 +187,7 @@ uint16_t blecpp::read_callback(hci_con_handle_t con_handle,
   return 0;
 }
 
-int blecpp::write_callback(hci_con_handle_t con_handle,
+int bledev::write_callback(hci_con_handle_t con_handle,
 			  uint16_t att_handle, 
 			  uint16_t mode, 
 			  uint16_t offset, 
@@ -197,18 +197,18 @@ int blecpp::write_callback(hci_con_handle_t con_handle,
   return 0;
 }
 
-blecpp& blecpp::get_instance()
+bledev& bledev::get_instance()
 {
   // for a multithread system, assure init_singleton is called only once
-  std::call_once(priv_init_instance_flag, &blecpp::init_singleton);
+  std::call_once(priv_init_instance_flag, &bledev::init_singleton);
 
   // return the instance
   return *priv_instance;
 }
 
-void blecpp::init_singleton()
+void bledev::init_singleton()
 {
-  priv_instance = new blecpp;
+  priv_instance = new bledev;
 }
 
 

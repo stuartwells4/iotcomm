@@ -35,11 +35,11 @@
 #define BLE_ADVERT_LENGTH 31
 #define BLE_RESPONSE_LENGTH 32
 
-class blecpp
+class bledev
 {
  public:
-  blecpp();
-  ~blecpp();
+  bledev();
+  ~bledev();
 
   // Start the BLE Device
   void start(void);
@@ -78,6 +78,7 @@ class blecpp
   std::string priv_str_firmware;
   std::string priv_str_software;
   std::string priv_str_serial;
+  std::string priv_str_devicename;
   uint8_t priv_advert_data [BLE_ADVERT_LENGTH];
   uint8_t priv_reponse_data [BLE_RESPONSE_LENGTH];
   uint8_t priv_advert_length;
@@ -95,10 +96,10 @@ class blecpp
   } BLE_ADVERT_INFO;
   // Singleton instance.
  public:
-  static blecpp& get_instance();
+  static bledev& get_instance();
 
  private:
-  static blecpp* priv_instance;
+  static bledev* priv_instance;
   static std::once_flag priv_init_instance_flag;
 
   static void init_singleton();

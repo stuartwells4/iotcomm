@@ -39,10 +39,10 @@ PROJECT_BTE_SERVICE += \
 #blecpp.o: blecpp.c
 #	${CXX} $(filter-out iotble_uuid.h,$^) ${CFLAGS} ${LDFLAGS} -o $@
 
-blecpp: blecpp_uuid.h blecpp.c main.c libiotble.a
-	${CXX} -c $(filter-out iotble_uuid.h,$^) ${CFLAGS}
-	${CXX} blecpp.o main.o ${LDFLAGS} libiotble.a -o $@
+blecpp: blecpp_uuid.h bledev.c main.c libiotble.a
+	${CXX} -c $(filter-out blecpp_uuid.h,$^) ${CFLAGS}
+	${CXX} bledev.o main.o ${LDFLAGS} libiotble.a -o $@
 
 libiotble.a: blecpp_uuid.h ${BT_CORE_OBJ} ${PORT_CORE_OBJ} ${PROJECT_BTE_SERVICE}
-	${AR} rcs $@ $(filter-out iotble_uuid.h,$^)
+	${AR} rcs $@ $(filter-out blecpp_uuid.h,$^)
 
