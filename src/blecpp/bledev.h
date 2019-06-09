@@ -94,6 +94,7 @@ class bledev
     ADVERT_COMPLETE_NAME=0x09,
     SCAN_MANUFACTURER_DATA=0xFF
   } BLE_ADVERT_INFO;
+
   // Singleton instance.
  public:
   static bledev& get_instance();

@@ -31,6 +31,8 @@ CFLAGS += \
 PROJECT_BTE_SERVICE += \
 		    battery_service_server.o \
 		    device_information_service_server.o
+PROJECT_SRC += bledev.c blesetup.c main.c
+PROJECT_SRC_OBJ = $(PROJECT_SRC:.c=.o)
 
 # compile .gatt descriptions
 %.h: %.gatt
@@ -39,9 +41,9 @@ PROJECT_BTE_SERVICE += \
 #blecpp.o: blecpp.c
 #	${CXX} $(filter-out iotble_uuid.h,$^) ${CFLAGS} ${LDFLAGS} -o $@
 
-blecpp: blecpp_uuid.h bledev.c main.c libiotble.a
+blecpp: blecpp_uuid.h ${PROJECT_SRC} libiotble.a
 	${CXX} -c $(filter-out blecpp_uuid.h,$^) ${CFLAGS}
-	${CXX} bledev.o main.o ${LDFLAGS} libiotble.a -o $@
+	${CXX} ${PROJECT_SRC_OBJ} ${LDFLAGS} libiotble.a -o $@
 
 libiotble.a: blecpp_uuid.h ${BT_CORE_OBJ} ${PORT_CORE_OBJ} ${PROJECT_BTE_SERVICE}
 	${AR} rcs $@ $(filter-out blecpp_uuid.h,$^)
