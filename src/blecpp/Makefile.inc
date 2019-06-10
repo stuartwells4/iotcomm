@@ -31,7 +31,7 @@ CFLAGS += \
 PROJECT_BTE_SERVICE += \
 		    battery_service_server.o \
 		    device_information_service_server.o
-PROJECT_SRC += bledev.c blesetup.c main.c
+PROJECT_SRC += bledev.c blesetup.c bledatagram.c main.c
 PROJECT_SRC_OBJ = $(PROJECT_SRC:.c=.o)
 
 # compile .gatt descriptions

@@ -1,0 +1,10 @@
+// Datagram Service
+PRIMARY_SERVICE, 01013ca2-8e10-49f0-ba0C-3ca8f9a4fb95
+
+// Status message Datagram
+CHARACTERISTIC,  11013ca2-8e10-49f0-ba0C-3ca8f9a4fb95, READ | NOTIFY | DYNAMIC,
+
+// Command Datagram
+CHARACTERISTIC,  11023ca2-8e10-49f0-ba0C-3ca8f9a4fb95, READ | WRITE | DYNAMIC,
+
+
