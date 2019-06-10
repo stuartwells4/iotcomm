@@ -25,11 +25,6 @@
 
 #include <iostream>
 #include "bledatagram.h"
-#include "btstack.h"
-#include "btstack_defines.h"
-#include "ble/att_db.h"
-#include "ble/att_server.h"
-#include "btstack_util.h"
 
 bledatagram* bledatagram::priv_instance= NULL;
 std::once_flag bledatagram::priv_init_instance_flag;
@@ -59,38 +54,67 @@ bledatagram::bledatagram()
     priv_command_conf = gatt_server_get_client_configuration_handle_for_characteristic_with_uuid128(sstart,
 												   send,
 												   priv_char_command_uuid);
+
+    priv_att_service.start_handle = sstart;
+    priv_att_service.end_handle = send;
+    priv_att_service.read_callback = &bledatagram::priv_read_callback;
+    priv_att_service.write_callback = &bledatagram::priv_write_callback;
+    att_server_register_service_handler(&priv_att_service);
+
+    priv_packet_service.callback = &priv_packet_handler;
+    hci_add_event_handler(&priv_packet_service);
+
     priv_found = true;
   } else {
     priv_found = false;
   }
+  priv_status_notify = false;
+  priv_command_notify = false;
+
 }
 
 bledatagram::~bledatagram()
 {
   
 }
-#if 0
-void bledatagram::packet_handler (uint8_t packet_type, uint16_t channel, uint8_t *packet, uint16_t size)
+
+void bledatagram::priv_packet_handler (uint8_t packet_type, uint16_t channel, uint8_t *packet, uint16_t size)
 {
   if (packet_type == HCI_EVENT_PACKET) {
-    switch (hci_event_packet_get_type(packet))
+    if (HCI_EVENT_PACKET == packet_type)
       {
-      case BTSTACK_EVENT_STATE:
-	if (btstack_event_state_get_state(packet) == HCI_STATE_WORKING) {
-	  gap_local_bd_addr(bledatagram::priv_instance->priv_local_addr);
-	  bledatagram::priv_instance->priv_db_path = "/tmp/bt_blecpp.tlv";
-	  priv_tlv_impl = 
-	    btstack_tlv_posix_init_instance(&priv_tlv_context,
-					    bledatagram::priv_instance->priv_db_path.c_str());
-	  btstack_tlv_set_instance(priv_tlv_impl, &priv_tlv_context);
-	}
-	break;
-      default:
-	break;
+	switch (hci_event_packet_get_type(packet))
+	  {
+	  case HCI_EVENT_DISCONNECTION_COMPLETE:
+	    bledatagram::priv_instance->priv_status_notify = false;
+	    bledatagram::priv_instance->priv_command_notify = false;
+	    break;
+	  default:
+	    break;
+	  }
       }
   }
 }
-#endif
+
+uint16_t bledatagram::priv_read_callback(hci_con_handle_t con_handle, 
+					 uint16_t att_handle, 
+					 uint16_t offset, 
+					 uint8_t *buffer, 
+					 uint16_t buffer_size)
+{
+  return 0;
+}
+
+int bledatagram::priv_write_callback(hci_con_handle_t con_handle,
+				     uint16_t att_handle, 
+				     uint16_t mode, 
+				     uint16_t offset, 
+				     uint8_t *buffer, 
+				     uint16_t buffer_size)
+{
+  return 0;
+}
+
 
 bledatagram& bledatagram::get_instance()
 {
